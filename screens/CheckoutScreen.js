@@ -71,7 +71,6 @@ export default function CheckoutScreen({ navigation, route }) {
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.conteudo}>
-      >
       <View style={styles.containerCheckout}>
         <Text style={styles.titulo}>Checkout</Text>
         <Text style={styles.totalTexto}>Total: R$ {total.toFixed(2) || 0}</Text>
