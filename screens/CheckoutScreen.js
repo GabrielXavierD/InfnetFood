@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import * as Notifications from 'expo-notifications';
 import {
   View,
+  ScrollView,
   Text,
   TextInput,
   Pressable,
@@ -11,7 +12,7 @@ import {
 import { CarrinhoContext } from '../context/CarrinhoContext';
 
 export default function CheckoutScreen({ navigation, route }) {
-  const { total } = route.params;
+  const { carrinho, total } = route.params;
   const { limparCarrinho } = useContext(CarrinhoContext);
   const [form, setForm] = useState({
     endereco: '',
@@ -67,10 +68,29 @@ export default function CheckoutScreen({ navigation, route }) {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.conteudo}>
+      >
       <View style={styles.containerCheckout}>
         <Text style={styles.titulo}>Checkout</Text>
         <Text style={styles.totalTexto}>Total: R$ {total.toFixed(2) || 0}</Text>
+        <Text style={styles.titulo}>Resumo do Pedido:</Text>
+        <View style={styles.itemContainer}>
+          {carrinho.map((item) => (
+            <View key={item.id} style={styles.itemContainer}>
+              <Text style={styles.nomeProduto}>{item.nome}</Text>
+              <Text style={styles.quantiaTexto}>
+                Quantia: {item.quantidade}
+              </Text>
+              <Text style={styles.precoTexto}>
+                R${(item.preco * item.quantidade).toFixed(2)}
+              </Text>
+              <View style={styles.separador} />
+            </View>
+          ))}
+        </View>
+
         <Text>Endereço:</Text>
         <TextInput
           style={styles.input}
@@ -99,19 +119,21 @@ export default function CheckoutScreen({ navigation, route }) {
           <Text style={styles.botaoTexto}>Confirmar Pedido</Text>
         </Pressable>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 26,
+    backgroundColor: '#fff',
+  },
+  conteudo: {
+    padding: 20,
+    paddingBottom: 60,
   },
   containerCheckout: {
-    padding: 10,
+    padding: 15,
     borderRadius: 10,
     width: '100%',
     backgroundColor: '#96DED1',
@@ -145,5 +167,33 @@ const styles = StyleSheet.create({
   erro: {
     color: 'red',
     marginBottom: 5,
+  },
+  listaScroll: {
+    width: '100%',
+  },
+  itemContainer: {
+    flexDirection: 'column',
+    backgroundColor: '#FFF8DC',
+    padding: 10,
+    borderRadius: 6,
+    marginBottom: 10,
+  },
+  nomeProduto: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  quantiaTexto: {
+    fontWeight: 'bold',
+    marginVertical: 2,
+  },
+  precoTexto: {
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  separador: {
+    borderBottomColor: '#000',
+    borderBottomWidth: 1,
+    marginTop: 10,
+    width: '100%',
   },
 });
